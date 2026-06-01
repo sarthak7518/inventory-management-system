@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.exc import IntegrityError
 
 from app.database import engine, Base, get_db
 from app.models import Product, Customer, Order
@@ -120,8 +121,15 @@ def delete_product(
             detail="Product not found"
         )
 
-    db.delete(product)
-    db.commit()
+    try:
+        db.delete(product)
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot delete product because it is referenced in active orders."
+        )
 
     return {"message": "Product deleted successfully"}
 
@@ -221,8 +229,15 @@ def delete_customer(
             detail="Customer not found"
         )
 
-    db.delete(customer)
-    db.commit()
+    try:
+        db.delete(customer)
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot delete customer because they have active orders."
+        )
 
     return {"message": "Customer deleted successfully"}
 # ==========================
