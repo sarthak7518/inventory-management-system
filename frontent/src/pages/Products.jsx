@@ -57,7 +57,8 @@ function Products() {
       alert("Product Added Successfully");
     } catch (error) {
       console.error(error);
-      alert("Failed to create product");
+      const detail = error.response?.data?.detail || "Failed to create product";
+      alert(`Failed to create product: ${detail}`);
     }
   };
 
@@ -67,7 +68,8 @@ function Products() {
       fetchProducts();
     } catch (error) {
       console.error(error);
-      alert("Failed to delete product");
+      const detail = error.response?.data?.detail || "Failed to delete product";
+      alert(`Failed to delete product: ${detail}`);
     }
   };
 
@@ -91,7 +93,8 @@ function Products() {
       alert("Product Updated Successfully");
     } catch (error) {
       console.error(error);
-      alert("Failed to update product");
+      const detail = error.response?.data?.detail || "Failed to update product";
+      alert(`Failed to update product: ${detail}`);
     }
   };
 

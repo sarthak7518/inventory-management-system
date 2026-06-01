@@ -29,7 +29,8 @@ function Customers() {
       fetchCustomers();
     } catch (error) {
       console.error(error);
-      alert("Failed to delete customer");
+      const detail = error.response?.data?.detail || "Failed to delete customer";
+      alert(`Failed to delete customer: ${detail}`);
     }
   };
 
@@ -57,7 +58,8 @@ function Customers() {
       alert("Customer Added Successfully");
     } catch (error) {
       console.error(error);
-      alert("Failed to add customer");
+      const detail = error.response?.data?.detail || "Failed to add customer";
+      alert(`Failed to add customer: ${detail}`);
     }
   };
 

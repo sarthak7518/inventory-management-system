@@ -49,7 +49,8 @@ function Orders() {
       fetchOrders();
     } catch (error) {
       console.error(error);
-      alert("Failed to create order");
+      const detail = error.response?.data?.detail || "Failed to create order";
+      alert(`Failed to create order: ${detail}`);
     }
   };
 
