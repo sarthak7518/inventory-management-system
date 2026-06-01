@@ -121,15 +121,11 @@ def delete_product(
             detail="Product not found"
         )
 
-    try:
-        db.delete(product)
-        db.commit()
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=400,
-            detail="Cannot delete product because it is referenced in active orders."
-        )
+    # Delete all associated orders first
+    db.query(Order).filter(Order.product_id == product_id).delete()
+
+    db.delete(product)
+    db.commit()
 
     return {"message": "Product deleted successfully"}
 
@@ -229,15 +225,11 @@ def delete_customer(
             detail="Customer not found"
         )
 
-    try:
-        db.delete(customer)
-        db.commit()
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=400,
-            detail="Cannot delete customer because they have active orders."
-        )
+    # Delete all associated orders first
+    db.query(Order).filter(Order.customer_id == customer_id).delete()
+
+    db.delete(customer)
+    db.commit()
 
     return {"message": "Customer deleted successfully"}
 # ==========================
